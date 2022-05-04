@@ -41,6 +41,21 @@ class Ball(GameSprite):
         if sprite.collide_rect(player2, ball) and self.speed_x > 0:
             self.speed_x = -self.speed_x
 
+        if self.rect.x <= 0:
+            score[0] = score[0] + 1
+            self.rect.x = win_width/2
+            self.rect.y = win_height/2
+            self.speed_x = 5
+            self.speed_y = randint(-5, 5)
+            
+
+        if self.rect.x >= 700:
+            score[1] = score[1] + 1
+            self.rect.x = win_width/2
+            self.rect.y = win_height/2
+            self.speed_x = 5
+            self.speed_y = randint(-5, 5)
+            
 
 img_player1 = "player1.png"
 img_player2 = "player2.png"
@@ -63,6 +78,11 @@ clock = time.Clock()
 fps = 60
 timing = tm.time()
 
+font.init()
+font1 = font.Font(None, 80)
+score = [0, 0]
+win_txt = font1.render("You Win!", True, (255, 75, 75))
+
 finish = False
 run = True 
 while run:
@@ -74,6 +94,9 @@ while run:
         dt = clock.tick(fps)
         draw.rect(window, (200,255,255), Rect(0, 0, win_width, win_height))
 
+        score_txt = font1.render(str(score[0]) + " - " + str(score[1]), True, (0, 0, 0))
+        window.blit(score_txt, (300, 10))
+
         player1.move()
         player2.move()
         ball.move()
@@ -81,5 +104,10 @@ while run:
         player2.reset()
         player1.reset()
         ball.reset()
+
+        if score[0] >= 3:
+            finish = True
+            window.blit(win, (100, 50))
+
         display.update()
     
